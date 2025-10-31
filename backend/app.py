@@ -878,6 +878,19 @@ def get_admin_contact():
     except Exception as e:
         return jsonify({'error': f'Erro interno do servidor: {str(e)}'}), 500
 
+# Rota raiz - mensagem de boas-vindas
+@app.route('/', methods=['GET'])
+def root():
+    return jsonify({
+        'message': 'BuyCar Moz API - Backend funcionando!',
+        'status': 'online',
+        'endpoints': {
+            'test': '/api/test',
+            'cars': '/api/cars',
+            'auth': '/api/auth/login'
+        }
+    }), 200
+
 # Rota de teste
 @app.route('/api/test', methods=['GET'])
 def test():
@@ -1041,24 +1054,26 @@ def create_general_comment():
         print(f"Erro completo ao criar comentario: {str(e)}")
         return jsonify({'error': f'Erro ao criar comentario: {str(e)}'}), 500
 
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        
-        # Criar usuário administrador padrão se não existir
-        admin = User.query.filter_by(is_admin=True).first()
-        if not admin:
-            admin = User(
-                name='Administrador',
-                email='admin@buycarr.com',
-                phone='11999999999',
-                password_hash=generate_password_hash('admin123'),
-                is_admin=True
-            )
-            db.session.add(admin)
-            db.session.commit()
-            print("Usuário administrador criado: admin@buycarr.com / admin123")
+# Inicializar banco de dados quando o app é carregado
+with app.app_context():
+    db.create_all()
     
+    # Criar usuário administrador padrão se não existir
+    admin = User.query.filter_by(is_admin=True).first()
+    if not admin:
+        admin = User(
+            name='Administrador',
+            email='admin@buycarr.com',
+            phone='11999999999',
+            password_hash=generate_password_hash('admin123'),
+            is_admin=True
+        )
+        db.session.add(admin)
+        db.session.commit()
+        print("Usuário administrador criado: admin@buycarr.com / admin123")
+
+# Executar apenas se for chamado diretamente (desenvolvimento local)
+if __name__ == '__main__':
     # Porta configurável para deploy (Render, Heroku, etc)
     port = int(os.getenv('PORT', 5000))
     debug_mode = os.getenv('FLASK_ENV', 'development') == 'development'
