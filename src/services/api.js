@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Configurar a URL base da API
 // Substitua pelo IP da sua máquina quando estiver testando
 // URL do backend em produção (Render)
-const BASE_URL = 'https://buycarrr.onrender.com/api';
+const BASE_URL = 'https://buycarrr-1.onrender.com/api';
 
 // Criar instância do axios
 const api = axios.create({

@@ -20,7 +20,7 @@ import axios from 'axios';
 const { width } = Dimensions.get('window');
 
 // URL do backend em produção (Render)
-const API_BASE_URL = 'https://buycarrr.onrender.com/api';
+const API_BASE_URL = 'https://buycarrr-1.onrender.com/api';
 
 const CarDetailsClient = ({ car, onClose, onReserve, onFavorite, authToken }) => {
   const [showGallery, setShowGallery] = useState(false);

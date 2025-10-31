@@ -1055,23 +1055,23 @@ def create_general_comment():
         return jsonify({'error': f'Erro ao criar comentario: {str(e)}'}), 500
 
 # Inicializar banco de dados quando o app é carregado
-with app.app_context():
-    db.create_all()
+    with app.app_context():
+        db.create_all()
+        
+        # Criar usuário administrador padrão se não existir
+        admin = User.query.filter_by(is_admin=True).first()
+        if not admin:
+            admin = User(
+                name='Administrador',
+                email='admin@buycarr.com',
+                phone='11999999999',
+                password_hash=generate_password_hash('admin123'),
+                is_admin=True
+            )
+            db.session.add(admin)
+            db.session.commit()
+            print("Usuário administrador criado: admin@buycarr.com / admin123")
     
-    # Criar usuário administrador padrão se não existir
-    admin = User.query.filter_by(is_admin=True).first()
-    if not admin:
-        admin = User(
-            name='Administrador',
-            email='admin@buycarr.com',
-            phone='11999999999',
-            password_hash=generate_password_hash('admin123'),
-            is_admin=True
-        )
-        db.session.add(admin)
-        db.session.commit()
-        print("Usuário administrador criado: admin@buycarr.com / admin123")
-
 # Executar apenas se for chamado diretamente (desenvolvimento local)
 if __name__ == '__main__':
     # Porta configurável para deploy (Render, Heroku, etc)

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // Configuração da API
 // URL do backend em produção (Render)
-const API_BASE_URL = 'https://buycarrr.onrender.com/api';
+const API_BASE_URL = 'https://buycarrr-1.onrender.com/api';
 
 // Configurar timeout do axios
 axios.defaults.timeout = 30000; // 30 segundos

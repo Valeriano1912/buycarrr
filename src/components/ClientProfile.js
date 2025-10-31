@@ -15,7 +15,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // URL do backend em produção (Render)
-const API_BASE_URL = 'https://buycarrr.onrender.com/api';
+const API_BASE_URL = 'https://buycarrr-1.onrender.com/api';
 
 const ClientProfile = ({ authToken, onLogout }) => {
   const [profileData, setProfileData] = useState({

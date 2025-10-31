@@ -106,7 +106,7 @@ const ClientScreen = ({ authToken, onLogout }) => {
   const fetchCarsAndCounts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('https://buycarrr.onrender.com/api/cars');
+      const response = await axios.get('https://buycarrr-1.onrender.com/api/cars');
       const carsData = response.data.cars || response.data;
       setCars(carsData);
       

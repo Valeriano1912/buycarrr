@@ -18,7 +18,7 @@ import CarBrandMenu from './CarBrandMenu';
 import Footer from './Footer';
 
 // URL do backend em produção (Render)
-const API_BASE_URL = 'https://buycarrr.onrender.com/api';
+const API_BASE_URL = 'https://buycarrr-1.onrender.com/api';
 
 /**
  * Transforma o path salvo no banco para a URL real do backend.
@@ -30,7 +30,7 @@ const API_BASE_URL = 'https://buycarrr.onrender.com/api';
 const getCarImageUrl = (img) => {
   if (!img) return 'https://via.placeholder.com/250x150?text=Sem+Imagem'; // Usar placeholder universal seguro
   if (img.startsWith('data:')) return img; // Caso especial: base64
-  if (img.startsWith('/uploads')) return `https://buycarrr.onrender.com${img}`; // Path do backend em produção
+  if (img.startsWith('/uploads')) return `https://buycarrr-1.onrender.com${img}`; // Path do backend em produção
   if (img.startsWith('http')) return img; // J 1 um link absoluto
   return 'https://via.placeholder.com/250x150?text=Sem+Imagem'; // fallback seguro
 };
@@ -311,7 +311,7 @@ const CarCatalog = ({ authToken, showBrandMenu = false, onBrandMenuPress = null,
     }
     const [isFavorite, setIsFavorite] = useState(false);
     const [imageError, setImageError] = useState(false);
-
+    
     // Novo layout: flexDirection row (imagem esquerda, info direita)
     return (
       <TouchableOpacity style={[styles.carCard, { flexDirection: 'row', alignItems: 'center' }]} onPress={() => handleShowCarDetails(car)}>
@@ -341,21 +341,21 @@ const CarCatalog = ({ authToken, showBrandMenu = false, onBrandMenuPress = null,
             </TouchableOpacity>
             {/* Ícone de favoritar (opcional) */}
             <TouchableOpacity style={{ marginLeft: 8 }} onPress={e => { setIsFavorite(!isFavorite); e.stopPropagation && e.stopPropagation(); }}>
-              <MaterialIcons 
-                name={isFavorite ? "favorite" : "favorite-border"} 
+            <MaterialIcons 
+              name={isFavorite ? "favorite" : "favorite-border"} 
                 size={22} 
-                color={isFavorite ? "#e74c3c" : "#fff"} 
-              />
-            </TouchableOpacity>
-          </View>
+              color={isFavorite ? "#e74c3c" : "#fff"} 
+            />
+          </TouchableOpacity>
+            </View>
           {/* Badges premium/status */}
           <View style={{ flexDirection: 'row', marginTop: 2 }}>
             {car.status === 'Vendido' && (
               <Text style={{ backgroundColor: '#e74c3c', color: '#fff', fontSize: 10, fontWeight: 'bold', borderRadius: 4, paddingHorizontal: 5, marginRight: 4 }}>VENDIDO</Text>
-            )}
-            {isPremium && car.status !== 'Vendido' && (
+          )}
+          {isPremium && car.status !== 'Vendido' && (
               <Text style={{ backgroundColor: '#f39c12', color: '#fff', fontSize: 10, fontWeight: 'bold', borderRadius: 4, paddingHorizontal: 5, marginRight: 4 }}>PREMIUM</Text>
-            )}
+          )}
           </View>
         </View>
       </TouchableOpacity>
