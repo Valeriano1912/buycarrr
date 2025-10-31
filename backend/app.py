@@ -1059,4 +1059,8 @@ if __name__ == '__main__':
             db.session.commit()
             print("Usuário administrador criado: admin@buycarr.com / admin123")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Porta configurável para deploy (Render, Heroku, etc)
+    port = int(os.getenv('PORT', 5000))
+    debug_mode = os.getenv('FLASK_ENV', 'development') == 'development'
+    
+    app.run(debug=debug_mode, host='0.0.0.0', port=port)

@@ -12,7 +12,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import CarDetailsClient from './CarDetailsClient';
 
-const API_BASE_URL = 'http://10.142.136.134:5000/api';
+// URL do backend em produção (Render)
+const API_BASE_URL = 'https://buycarrr.onrender.com/api';
 
 const FavoritesScreen = ({ authToken }) => {
   const [favorites, setFavorites] = useState([]);

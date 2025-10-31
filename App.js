@@ -14,7 +14,8 @@ import CarManagementScreen from './src/screens/CarManagementScreen';
 import ClientScreen from './src/screens/ClientScreen';
 
 // Configuração da API
-const API_BASE_URL = 'http://10.142.136.134:5000/api';
+// URL do backend em produção (Render)
+const API_BASE_URL = 'https://buycarrr.onrender.com/api';
 
 export default function App() {
   const [email, setEmail] = useState('');
@@ -738,7 +739,7 @@ export default function App() {
         </TouchableOpacity>
         
         <Text style={styles.info}>
-          Backend rodando em: http://10.142.136.134:5000
+          Backend rodando em: https://buycarrr.onrender.com
         </Text>
         <Text style={styles.info}>
           Admin: admin@buycarr.com / admin123

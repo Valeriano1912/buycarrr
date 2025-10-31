@@ -19,7 +19,8 @@ import placeholderImg from '../../assets/favicon.png'; // Use o caminho para uma
 // Usar MediaType ao invés de MediaTypeOptions (deprecado)
 const { MediaType } = ImagePicker;
 
-const API_BASE_URL = 'http://10.142.136.134:5000/api';
+// URL do backend em produção (Render)
+const API_BASE_URL = 'https://buycarrr.onrender.com/api';
 
 const CommentsScreen = ({ authToken }) => {
   const [comments, setComments] = useState([]);

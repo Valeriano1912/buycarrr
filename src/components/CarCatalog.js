@@ -17,7 +17,8 @@ import CarTypeMenu from './CarTypeMenu';
 import CarBrandMenu from './CarBrandMenu';
 import Footer from './Footer';
 
-const API_BASE_URL = 'http://10.142.136.134:5000/api';
+// URL do backend em produção (Render)
+const API_BASE_URL = 'https://buycarrr.onrender.com/api';
 
 /**
  * Transforma o path salvo no banco para a URL real do backend.
@@ -29,7 +30,7 @@ const API_BASE_URL = 'http://10.142.136.134:5000/api';
 const getCarImageUrl = (img) => {
   if (!img) return 'https://via.placeholder.com/250x150?text=Sem+Imagem'; // Usar placeholder universal seguro
   if (img.startsWith('data:')) return img; // Caso especial: base64
-  if (img.startsWith('/uploads')) return `http://10.142.136.134:5000${img}`; // Path do backend
+  if (img.startsWith('/uploads')) return `https://buycarrr.onrender.com${img}`; // Path do backend em produção
   if (img.startsWith('http')) return img; // J 1 um link absoluto
   return 'https://via.placeholder.com/250x150?text=Sem+Imagem'; // fallback seguro
 };

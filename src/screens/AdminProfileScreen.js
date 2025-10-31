@@ -16,7 +16,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 
 // Configuração da API
-const API_BASE_URL = 'http://10.142.136.134:5000/api';
+// URL do backend em produção (Render)
+const API_BASE_URL = 'https://buycarrr.onrender.com/api';
 
 const AdminProfileScreen = ({ onClose, authToken }) => {
   const [profileData, setProfileData] = useState({
