@@ -15,7 +15,7 @@ import ClientScreen from './src/screens/ClientScreen';
 
 // Configuração da API
 // URL do backend em produção (Render)
-const API_BASE_URL = 'https://buycarrr.onrender.com/api';
+const API_BASE_URL = 'https://buycarrr-1.onrender.com/api';
 
 export default function App() {
   const [email, setEmail] = useState('');

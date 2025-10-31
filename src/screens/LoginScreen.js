@@ -39,9 +39,9 @@ export default function LoginScreen({ navigation }) {
         console.log('✅ Navegando para Main...');
         navigation.navigate('Main');
       } else {
-        const errorMessage = result?.error || 'Erro desconhecido';
+        const errorMessage = result?.error || 'Erro desconhecido ao fazer login. Tente novamente.';
         console.log('❌ Erro no login:', errorMessage);
-        Alert.alert('Erro', errorMessage);
+        Alert.alert('Erro no Login', errorMessage);
       }
     } catch (error) {
       console.error('❌ Exceção no login:', error);

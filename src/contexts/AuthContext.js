@@ -95,8 +95,26 @@ export const AuthProvider = ({ children }) => {
         console.error('⚠️ Erro ao configurar a requisição');
       }
       
-      const errorMessage = error?.response?.data?.error || error?.message || 'Erro de conexão';
-      console.error('Mensagem final:', errorMessage);
+      // Determinar mensagem de erro apropriada
+      let errorMessage = 'Erro desconhecido';
+      
+      if (error.response) {
+        // Servidor respondeu com erro (4xx, 5xx)
+        errorMessage = error.response.data?.error || 
+                      `Erro do servidor (${error.response.status})` ||
+                      'Erro no servidor';
+        console.error('❌ Erro do servidor:', errorMessage);
+      } else if (error.request) {
+        // Requisição foi feita mas não houve resposta (timeout, conexão recusada, etc)
+        errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão ou se o servidor está online.';
+        console.error('❌ Sem resposta do servidor - possíveis causas: servidor offline, timeout, ou CORS');
+      } else {
+        // Erro ao configurar a requisição
+        errorMessage = error.message || 'Erro ao fazer a requisição';
+        console.error('❌ Erro na configuração da requisição:', errorMessage);
+      }
+      
+      console.error('Mensagem final de erro:', errorMessage);
       
       return { 
         success: false, 
