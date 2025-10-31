@@ -1,0 +1,20 @@
+# Node / Expo
+node_modules/
+.expo/
+.expo-shared/
+npm-debug.log
+yarn-error.log
+dist/
+web-build/
+
+# Python
+__pycache__/
+*.pyc
+instance/
+buycarr.db
+.env
+venv/
+.env.*
+
+# OS
+.DS_Store
