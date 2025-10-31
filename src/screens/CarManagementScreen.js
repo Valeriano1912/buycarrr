@@ -130,7 +130,7 @@ const ImagePickerComponent = ({ onImageSelect }) => {
               style={styles.modalOption} 
               onPress={() => selectImage('camera')}
             >
-              <MaterialIcons name="photo-camera" size={24} color="#FF6B00" />
+              <MaterialIcons name="photo-camera" size={24} color="#3498db" />
               <Text style={styles.modalOptionText}>Tirar Foto</Text>
             </TouchableOpacity>
             
@@ -138,7 +138,7 @@ const ImagePickerComponent = ({ onImageSelect }) => {
               style={styles.modalOption} 
               onPress={() => selectImage('gallery')}
             >
-              <MaterialIcons name="photo-library" size={24} color="#FF6B00" />
+              <MaterialIcons name="photo-library" size={24} color="#3498db" />
               <Text style={styles.modalOptionText}>Escolher da Galeria</Text>
             </TouchableOpacity>
             
@@ -867,19 +867,19 @@ export default function CarManagementScreen({ navigation, authToken }) {
     setShowSideMenu(false);
   };
 
-  // Função para renderizar ícones das tabs - Usando cores do sistema (Laranja #FF6B00 para ativo, cinza para inativo)
+  // Função para renderizar ícones das tabs
   const renderTabIcon = (tabName, isActive) => {
     switch (tabName) {
       case 'dashboard':
-        return <MaterialIcons name="dashboard" size={24} color={isActive ? '#FF6B00' : '#999'} />;
+        return <MaterialIcons name="dashboard" size={24} color={isActive ? '#3498db' : '#bdc3c7'} />;
       case 'cars':
-        return <MaterialIcons name="directions-car" size={24} color={isActive ? '#FF6B00' : '#999'} />;
+        return <MaterialIcons name="directions-car" size={24} color={isActive ? '#3498db' : '#bdc3c7'} />;
       case 'reservations':
-        return <MaterialIcons name="event-note" size={24} color={isActive ? '#FF6B00' : '#999'} />;
+        return <MaterialIcons name="event-note" size={24} color={isActive ? '#3498db' : '#bdc3c7'} />;
       case 'profile':
-        return <MaterialIcons name="person" size={24} color={isActive ? '#FF6B00' : '#999'} />;
+        return <MaterialIcons name="person" size={24} color={isActive ? '#3498db' : '#bdc3c7'} />;
       default:
-        return <MaterialIcons name="help" size={24} color={isActive ? '#FF6B00' : '#999'} />;
+        return <MaterialIcons name="help" size={24} color={isActive ? '#3498db' : '#bdc3c7'} />;
     }
   };
 
@@ -890,21 +890,20 @@ export default function CarManagementScreen({ navigation, authToken }) {
         <Text style={styles.dashboardTitle}>Dashboard Administrativo</Text>
         
         <View style={styles.statsContainer}>
-          {/* Cards de estatísticas usando cores do sistema: Laranja (#FF6B00) e Vermelho (#e74c3c) */}
           <View style={styles.statCard}>
-            <MaterialIcons name="directions-car" size={30} color="#FF6B00" />
+            <MaterialIcons name="directions-car" size={30} color="#3498db" />
             <Text style={styles.statNumber}>{cars.length}</Text>
             <Text style={styles.statLabel}>Total de Carros</Text>
           </View>
           
           <View style={styles.statCard}>
-            <MaterialIcons name="check-circle" size={30} color="#FF6B00" />
+            <MaterialIcons name="check-circle" size={30} color="#2ecc71" />
             <Text style={styles.statNumber}>{cars.filter(car => car.status === 'Disponível').length}</Text>
             <Text style={styles.statLabel}>Disponíveis</Text>
           </View>
           
           <View style={styles.statCard}>
-            <MaterialIcons name="event-note" size={30} color="#FF6B00" />
+            <MaterialIcons name="event-note" size={30} color="#f39c12" />
             <Text style={styles.statNumber}>{cars.filter(car => car.status === 'Reservado').length}</Text>
             <Text style={styles.statLabel}>Reservados</Text>
           </View>
@@ -972,7 +971,7 @@ export default function CarManagementScreen({ navigation, authToken }) {
           <View style={styles.reservationsContainer}>
             <Text style={styles.sectionTitle}>Reservas Realizadas</Text>
             <View style={styles.loadingContainer}>
-              <MaterialIcons name="refresh" size={40} color="#FF6B00" />
+              <MaterialIcons name="refresh" size={40} color="#3498db" />
               <Text style={styles.loadingText}>Carregando reservas...</Text>
             </View>
           </View>
@@ -1044,7 +1043,7 @@ export default function CarManagementScreen({ navigation, authToken }) {
             ))
           ) : (
             <View style={styles.emptyReservations}>
-              <MaterialIcons name="event-note" size={60} color="#FF6B00" />
+              <MaterialIcons name="event-note" size={60} color="#3498db" />
               <Text style={styles.emptyReservationsText}>Nenhuma Reserva</Text>
               <Text style={styles.emptyReservationsSubtext}>
                 Quando houver reservas de carros, elas aparecerão aqui
@@ -1239,12 +1238,11 @@ export default function CarManagementScreen({ navigation, authToken }) {
             </View>
             
             <View style={styles.sideMenuContent}>
-              {/* Menu lateral com cores do sistema: Laranja (#FF6B00) para ativo, vermelho (#e74c3c) para ações destrutivas */}
               <TouchableOpacity 
                 style={[styles.sideMenuItem, activeTab === 'dashboard' && styles.activeSideMenuItem]}
                 onPress={() => handleMenuNavigation('dashboard')}
               >
-                <MaterialIcons name="dashboard" size={24} color={activeTab === 'dashboard' ? '#FF6B00' : '#666'} />
+                <MaterialIcons name="dashboard" size={24} color={activeTab === 'dashboard' ? '#3498db' : '#666'} />
                 <Text style={[styles.sideMenuText, activeTab === 'dashboard' && styles.activeSideMenuText]}>
                   Dashboard
                 </Text>
@@ -1254,7 +1252,7 @@ export default function CarManagementScreen({ navigation, authToken }) {
                 style={[styles.sideMenuItem, activeTab === 'cars' && styles.activeSideMenuItem]}
                 onPress={() => handleMenuNavigation('cars')}
               >
-                <MaterialIcons name="directions-car" size={24} color={activeTab === 'cars' ? '#FF6B00' : '#666'} />
+                <MaterialIcons name="directions-car" size={24} color={activeTab === 'cars' ? '#3498db' : '#666'} />
                 <Text style={[styles.sideMenuText, activeTab === 'cars' && styles.activeSideMenuText]}>
                   Carros
                 </Text>
@@ -1264,7 +1262,7 @@ export default function CarManagementScreen({ navigation, authToken }) {
                 style={[styles.sideMenuItem, activeTab === 'reservations' && styles.activeSideMenuItem]}
                 onPress={() => handleMenuNavigation('reservations')}
               >
-                <MaterialIcons name="event-note" size={24} color={activeTab === 'reservations' ? '#FF6B00' : '#666'} />
+                <MaterialIcons name="event-note" size={24} color={activeTab === 'reservations' ? '#3498db' : '#666'} />
                 <Text style={[styles.sideMenuText, activeTab === 'reservations' && styles.activeSideMenuText]}>
                   Reservas
                 </Text>
@@ -1274,7 +1272,7 @@ export default function CarManagementScreen({ navigation, authToken }) {
                 style={[styles.sideMenuItem, activeTab === 'profile' && styles.activeSideMenuItem]}
                 onPress={() => handleMenuNavigation('profile')}
               >
-                <MaterialIcons name="person" size={24} color={activeTab === 'profile' ? '#FF6B00' : '#666'} />
+                <MaterialIcons name="person" size={24} color={activeTab === 'profile' ? '#3498db' : '#666'} />
                 <Text style={[styles.sideMenuText, activeTab === 'profile' && styles.activeSideMenuText]}>
                   Perfil
                 </Text>
@@ -1327,18 +1325,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FF6B00', // Laranja principal do sistema
+    backgroundColor: '#3498db',
     borderRadius: 15,
     paddingVertical: 18,
     paddingHorizontal: 30,
     minHeight: 60,
     elevation: 5,
-    shadowColor: '#FF6B00', // Sombra laranja
+    shadowColor: '#3498db',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
     borderWidth: 2,
-    borderColor: '#e55a00', // Borda laranja mais escura
+    borderColor: '#2980b9',
   },
   addButtonText: {
     color: '#fff',
@@ -1620,7 +1618,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   saveButton: {
-    backgroundColor: '#FF6B00', // Laranja principal do sistema
+    backgroundColor: '#3498db',
     borderRadius: 10,
     paddingVertical: 15,
     paddingHorizontal: 30,
@@ -1667,38 +1665,37 @@ const styles = StyleSheet.create({
   cancelButtonModal: {
     borderBottomWidth: 0,
   },
-  // Estilos para tabs - Mesmas cores do cliente: fundo escuro (#1a1a1a), laranja para ativo
+  // Estilos para tabs
   bottomTabContainer: {
     flexDirection: 'row',
-    backgroundColor: '#1a1a1a', // Fundo escuro igual ao cliente
+    backgroundColor: '#fff',
     paddingTop: 8,
     paddingBottom: 8,
     paddingHorizontal: 10,
     borderTopWidth: 1,
-    borderTopColor: '#333', // Borda escura
+    borderTopColor: '#e9ecef',
     elevation: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.3, // Sombra mais forte
-    shadowRadius: 4,
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
   bottomTab: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 12, // Mesmo padding do cliente
-    paddingHorizontal: 8,
+    paddingVertical: 8,
   },
   activeBottomTab: {
-    backgroundColor: '#2a2a2a', // Background escuro para tab ativa (igual cliente)
+    // Cor será aplicada via ícone e texto
   },
   bottomTabText: {
     fontSize: 12,
-    color: '#999', // Cinza para tabs inativas (igual cliente)
+    color: '#6c757d',
     marginTop: 4,
     textAlign: 'center',
   },
   activeBottomTabText: {
-    color: '#FF6B00',
+    color: '#3498db',
     fontWeight: '600',
   },
   // Estilos para Dashboard
@@ -1710,7 +1707,7 @@ const styles = StyleSheet.create({
   dashboardTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6B00',
+    color: '#2c3e50',
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -1736,13 +1733,13 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6B00', // Laranja principal do sistema (igual ao cliente)
+    color: '#3498db',
     marginTop: 10,
     marginBottom: 5,
   },
   statLabel: {
     fontSize: 12,
-    color: '#666', // Texto escuro nos cards (melhor contraste)
+    color: '#2c3e50',
     textAlign: 'center',
   },
   revenueCard: {
@@ -1750,8 +1747,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 20,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#FF6B00',
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -1760,13 +1755,13 @@ const styles = StyleSheet.create({
   },
   revenueTitle: {
     fontSize: 18,
-    color: '#FF6B00',
+    color: '#2c3e50',
     fontWeight: 'bold',
     marginBottom: 10,
   },
   revenueAmount: {
     fontSize: 28,
-    color: '#FF6B00',
+    color: '#3498db',
     fontWeight: 'bold',
   },
   // Estilos para Carros com Fotos
@@ -1823,7 +1818,7 @@ const styles = StyleSheet.create({
   carPhotoPrice: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FF6B00', // Laranja principal do sistema
+    color: '#3498db',
   },
   carPhotoMileage: {
     fontSize: 14,
@@ -1872,7 +1867,7 @@ const styles = StyleSheet.create({
   reservationPrice: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#FF6B00', // Laranja principal do sistema
+    color: '#3498db',
     marginBottom: 15,
   },
   reservationActions: {
@@ -1943,7 +1938,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
-    color: '#FF6B00', // Laranja principal do sistema
+    color: '#3498db',
     marginTop: 10,
   },
   soldBadge: {
@@ -1990,7 +1985,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#FF6B00', // Laranja principal do sistema
+    backgroundColor: '#3498db',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
@@ -2008,7 +2003,7 @@ const styles = StyleSheet.create({
   },
   profileRole: {
     fontSize: 12,
-    color: '#FF6B00', // Laranja principal do sistema
+    color: '#3498db',
     fontWeight: '600',
   },
   profileStats: {
@@ -2026,7 +2021,7 @@ const styles = StyleSheet.create({
   profileStatNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6B00', // Laranja principal do sistema
+    color: '#3498db',
     marginBottom: 5,
   },
   profileStatLabel: {
@@ -2082,7 +2077,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     paddingTop: 60,
-    backgroundColor: '#000', // Fundo preto igual ao cliente
+    backgroundColor: '#3498db',
   },
   sideMenuTitle: {
     fontSize: 20,
@@ -2107,9 +2102,9 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   activeSideMenuItem: {
-    backgroundColor: '#2a2a2a', // Background escuro para item ativo (igual cliente)
+    backgroundColor: '#f8f9fa',
     borderLeftWidth: 4,
-    borderLeftColor: '#FF6B00', // Borda laranja (cor principal do sistema)
+    borderLeftColor: '#3498db',
   },
   sideMenuText: {
     fontSize: 16,
@@ -2118,7 +2113,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   activeSideMenuText: {
-    color: '#FF6B00', // Laranja principal do sistema (igual cliente)
+    color: '#3498db',
     fontWeight: '600',
   },
 });
