@@ -19,6 +19,7 @@ import ReservationsScreen from '../components/ReservationsScreen';
 import ClientProfile from '../components/ClientProfile';
 import Footer from '../components/Footer';
 import CommentsScreen from '../components/CommentsScreen';
+import { apiRequestWithRetry } from '../utils/apiHelper';
 
 const ClientScreen = ({ authToken, onLogout }) => {
   const [activeTab, setActiveTab] = useState('catalog');
@@ -106,19 +107,47 @@ const ClientScreen = ({ authToken, onLogout }) => {
   const fetchCarsAndCounts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('https://buycarrr-1.onrender.com/api/cars');
-      const carsData = response.data.cars || response.data;
+      const API_BASE_URL = 'https://buycarrr-1.onrender.com/api';
+      console.log('🔵 Buscando carros em:', `${API_BASE_URL}/cars`);
+      
+      // Usar retry automático para lidar com Render "adormecido"
+      const response = await apiRequestWithRetry({
+        method: 'get',
+        url: `${API_BASE_URL}/cars`,
+      }, 3, 2000); // 3 tentativas com 2 segundos de delay inicial
+      
+      const carsData = response.data.cars || response.data || [];
+      console.log('✅ Carros recebidos:', carsData.length);
       setCars(carsData);
       
       // Calcular contagens por marca
       const counts = {};
-      carsData.forEach(car => {
-        const brand = car.brand;
-        counts[brand] = (counts[brand] || 0) + 1;
-      });
+      if (Array.isArray(carsData)) {
+        carsData.forEach(car => {
+          const brand = car.brand;
+          counts[brand] = (counts[brand] || 0) + 1;
+        });
+      }
       setBrandCounts(counts);
     } catch (error) {
-      console.error('Erro ao carregar carros:', error);
+      console.error('❌ Erro ao carregar carros:', error);
+      console.error('Tipo do erro:', error.code || error.message);
+      
+      let errorMessage = 'Não foi possível carregar os carros';
+      
+      if (error.code === 'NETWORK_ERROR' || error.message === 'Network Error') {
+        errorMessage = 'Erro de conexão. Verifique sua internet ou se o servidor está online.';
+        console.error('⚠️ Network Error - possíveis causas: servidor offline, CORS, ou timeout');
+      } else if (error.response) {
+        errorMessage = `Erro do servidor: ${error.response.status}`;
+        console.error('Status:', error.response.status);
+      } else if (error.request) {
+        errorMessage = 'Servidor não respondeu. Verifique se está online.';
+        console.error('Sem resposta do servidor');
+      }
+      
+      console.error('Mensagem final:', errorMessage);
+      // Não mostrar alert para não incomodar o usuário, apenas logar
     } finally {
       setLoading(false);
     }

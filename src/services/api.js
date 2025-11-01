@@ -6,12 +6,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // URL do backend em produção (Render)
 const BASE_URL = 'https://buycarrr-1.onrender.com/api';
 
-// Criar instância do axios
+// Criar instância do axios com configurações otimizadas para React Native
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 30000, // 30 segundos (mesmo do AuthContext)
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+  // Configurações específicas para React Native/Expo
+  validateStatus: function (status) {
+    return status >= 200 && status < 500; // Aceitar status codes até 499
   },
 }); 
 

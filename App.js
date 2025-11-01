@@ -12,6 +12,7 @@ import axios from 'axios';
 import { AuthProvider } from './src/contexts/AuthContext';
 import CarManagementScreen from './src/screens/CarManagementScreen';
 import ClientScreen from './src/screens/ClientScreen';
+import { apiRequestWithRetry } from './src/utils/apiHelper';
 
 // Configuração da API
 // URL do backend em produção (Render)
@@ -447,10 +448,20 @@ export default function App() {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-        email,
-        password
-      });
+      console.log('🔵 App.js - Iniciando login...');
+      console.log('🌐 URL:', `${API_BASE_URL}/auth/login`);
+      
+      // Usar retry automático para lidar com Render "adormecido"
+      const response = await apiRequestWithRetry({
+        method: 'post',
+        url: `${API_BASE_URL}/auth/login`,
+        data: {
+          email,
+          password
+        },
+      }, 3, 2000); // 3 tentativas com 2 segundos de delay inicial
+      
+      console.log('✅ App.js - Resposta recebida');
 
           if (response.data.access_token) {
             setUser(response.data.user);
@@ -468,8 +479,28 @@ export default function App() {
             }
           }
     } catch (error) {
-      console.log('Erro no login:', error.response?.data);
-      Alert.alert('Erro', error.response?.data?.error || 'Erro ao fazer login');
+      console.error('❌ ERRO NO LOGIN (App.js)');
+      console.error('Erro completo:', error);
+      
+      let errorMessage = 'Erro ao fazer login';
+      
+      if (error.response) {
+        // Servidor respondeu com erro
+        errorMessage = error.response.data?.error || `Erro do servidor (${error.response.status})`;
+        console.error('Status:', error.response.status);
+        console.error('Data:', error.response.data);
+      } else if (error.request) {
+        // Sem resposta do servidor
+        errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão.';
+        console.error('Sem resposta do servidor');
+      } else {
+        // Erro na configuração
+        errorMessage = error.message || 'Erro ao fazer login';
+        console.error('Erro na requisição:', error.message);
+      }
+      
+      console.error('Mensagem de erro final:', errorMessage);
+      Alert.alert('Erro no Login', errorMessage);
     } finally {
       setLoading(false);
     }

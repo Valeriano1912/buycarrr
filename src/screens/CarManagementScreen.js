@@ -25,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CarDetailsScreen from './CarDetailsScreen';
 import AdminProfileScreen from './AdminProfileScreen';
 import Header from '../components/Header';
+import { apiRequestWithRetry } from '../utils/apiHelper';
 
 // Configuração da API
 // URL do backend em produção (Render)
@@ -564,19 +565,49 @@ export default function CarManagementScreen({ navigation, authToken }) {
   // Função para buscar reservas
   const fetchReservations = async () => {
     try {
+      setReservationsLoading(true);
+      console.log('🔵 CarManagementScreen - fetchReservations iniciado');
+      console.log('🔑 Token:', token ? 'Token presente' : 'Token ausente');
+      console.log('🌐 URL:', `${API_BASE_URL}/admin/reservations`);
+      
+      if (!token) {
+        console.warn('⚠️ Token ausente para buscar reservas');
+        return;
+      }
+      
       const response = await axios.get(`${API_BASE_URL}/admin/reservations`, {
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
+        timeout: 30000, // 30 segundos
+        validateStatus: (status) => status >= 200 && status < 500,
       });
       
       if (response.status === 200) {
-        setReservations(response.data.reservations || []);
+        const reservationsData = response.data.reservations || [];
+        console.log('✅ Reservas carregadas:', reservationsData.length);
+        setReservations(reservationsData);
+      } else {
+        console.warn('⚠️ Status inesperado:', response.status);
       }
     } catch (error) {
-      console.error('Erro ao buscar reservas:', error);
+      console.error('❌ CarManagementScreen - Erro ao buscar reservas:', error);
+      console.error('Tipo do erro:', error.code || error.message);
+      
+      if (error.code === 'NETWORK_ERROR' || error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+        console.error('⚠️ Network Error - Render pode estar "acordando"');
+      } else if (error.response) {
+        console.error('Status:', error.response.status);
+        console.error('Data:', error.response.data);
+      }
+      
+      // Não mostrar alert para reservas (não é crítico)
+      setReservations([]);
     } finally {
       setReservationsLoading(false);
+      console.log('🔄 fetchReservations finalizado');
     }
   };
 
@@ -670,24 +701,55 @@ export default function CarManagementScreen({ navigation, authToken }) {
   const fetchCars = async () => {
     try {
       setLoading(true);
-      console.log('fetchCars - token:', token ? 'Token presente' : 'Token ausente');
+      console.log('🔵 CarManagementScreen - fetchCars iniciado');
+      console.log('🔑 Token:', token ? 'Token presente' : 'Token ausente');
+      console.log('🌐 URL:', `${API_BASE_URL}/cars`);
       
-      if (!token) {
-        Alert.alert('Erro', 'Token de autenticação não encontrado');
-        return;
+      // Configurar headers
+      const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+      
+      // Adicionar token se disponível (endpoint não requer, mas não faz mal)
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await axios.get(`${API_BASE_URL}/cars`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      setCars(response.data.cars || response.data);
+      // Usar retry automático para lidar com Render "adormecido"
+      const response = await apiRequestWithRetry({
+        method: 'get',
+        url: `${API_BASE_URL}/cars`,
+        headers,
+      }, 3, 2000); // 3 tentativas com 2 segundos de delay inicial
+      
+      console.log('✅ CarManagementScreen - Resposta recebida');
+      const carsData = response.data.cars || response.data || [];
+      console.log('📦 Total de carros:', carsData.length);
+      setCars(carsData);
     } catch (error) {
-      console.error('Erro ao carregar carros:', error.response?.data);
-      Alert.alert('Erro', error.response?.data?.error || 'Não foi possível carregar os carros');
+      console.error('❌ CarManagementScreen - Erro ao carregar carros:', error);
+      console.error('Tipo do erro:', error.code || error.message);
+      
+      let errorMessage = 'Não foi possível carregar os carros';
+      
+      if (error.code === 'NETWORK_ERROR' || error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+        errorMessage = 'Erro de conexão. O servidor pode estar "adormecido" (Render free tier). Aguarde alguns segundos e tente novamente.';
+        console.error('⚠️ Network Error - Render pode estar "acordando"');
+      } else if (error.response) {
+        errorMessage = `Erro do servidor: ${error.response.status}`;
+        console.error('Status:', error.response.status);
+        console.error('Data:', error.response.data);
+      } else if (error.request) {
+        errorMessage = 'Servidor não respondeu. Verifique se está online.';
+        console.error('Sem resposta do servidor');
+      }
+      
+      console.error('Mensagem final:', errorMessage);
+      Alert.alert('Erro ao Carregar Carros', errorMessage);
     } finally {
       setLoading(false);
+      console.log('🔄 fetchCars finalizado');
     }
   };
   

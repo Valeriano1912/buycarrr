@@ -16,6 +16,7 @@ import CarDetailsClient from './CarDetailsClient';
 import CarTypeMenu from './CarTypeMenu';
 import CarBrandMenu from './CarBrandMenu';
 import Footer from './Footer';
+import { apiRequestWithRetry, testServerConnection } from '../utils/apiHelper';
 
 // URL do backend em produção (Render)
 const API_BASE_URL = 'https://buycarrr-1.onrender.com/api';
@@ -96,11 +97,24 @@ const CarCatalog = ({ authToken, showBrandMenu = false, onBrandMenuPress = null,
   const fetchCars = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/cars`);
+      console.log('🔵 CarCatalog - Buscando carros em:', `${API_BASE_URL}/cars`);
+      
+      // Primeiro, testar se o servidor está online
+      const serverOnline = await testServerConnection(API_BASE_URL);
+      if (!serverOnline) {
+        console.warn('⚠️ Servidor não respondeu ao teste. Tentando buscar carros mesmo assim...');
+      }
+      
+      // Usar retry automático para lidar com Render "adormecido"
+      const response = await apiRequestWithRetry({
+        method: 'get',
+        url: `${API_BASE_URL}/cars`,
+      }, 3, 2000); // 3 tentativas com 2 segundos de delay inicial
       
       // A API retorna {cars: [...]}, então precisamos acessar response.data.cars
-      const carsData = response.data.cars || response.data;
-      console.log('📦 Carros carregados:', carsData.length);
+      const carsData = response.data.cars || response.data || [];
+      console.log('✅ CarCatalog - Carros carregados:', carsData.length);
+      
       // Log de amostra para debug
       if (carsData.length > 0) {
         console.log('🔍 Primeiro carro (amostra):', {
@@ -113,8 +127,28 @@ const CarCatalog = ({ authToken, showBrandMenu = false, onBrandMenuPress = null,
       }
       setCars(carsData);
     } catch (error) {
-      console.error('Erro ao carregar carros:', error);
-      Alert.alert('Erro', 'Não foi possível carregar os carros');
+      console.error('❌ CarCatalog - Erro ao carregar carros após todas as tentativas:', error);
+      console.error('Tipo do erro:', error.code || error.message);
+      
+      let errorMessage = 'Não foi possível carregar os carros após várias tentativas.';
+      
+      if (error.code === 'NETWORK_ERROR' || error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+        errorMessage = 'Erro de conexão persistente. O servidor Render pode estar offline ou demorando muito para responder. Tente novamente em alguns segundos.';
+        console.error('⚠️ Network Error persistente - Possíveis causas:');
+        console.error('  1. Render free tier "adormecido" (pode levar até 60 segundos para acordar)');
+        console.error('  2. Problema de rede/conexão');
+        console.error('  3. Servidor offline');
+      } else if (error.response) {
+        errorMessage = `Erro do servidor: ${error.response.status}`;
+        console.error('Status:', error.response.status);
+        console.error('Data:', error.response.data);
+      } else if (error.request) {
+        errorMessage = 'Servidor não respondeu após várias tentativas.';
+        console.error('Sem resposta do servidor');
+      }
+      
+      console.error('Mensagem final:', errorMessage);
+      Alert.alert('Erro ao Carregar Carros', errorMessage);
     } finally {
       setLoading(false);
     }

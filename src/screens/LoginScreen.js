@@ -39,8 +39,17 @@ export default function LoginScreen({ navigation }) {
         console.log('✅ Navegando para Main...');
         navigation.navigate('Main');
       } else {
-        const errorMessage = result?.error || 'Erro desconhecido ao fazer login. Tente novamente.';
-        console.log('❌ Erro no login:', errorMessage);
+        // Garantir que sempre temos uma mensagem de erro válida
+        let errorMessage = 'Erro desconhecido ao fazer login. Tente novamente.';
+        
+        if (result && result.error) {
+          errorMessage = result.error;
+        } else if (result === undefined || result === null) {
+          errorMessage = 'Não foi possível processar o login. Tente novamente.';
+        }
+        
+        console.error('❌ Erro no login:', errorMessage);
+        console.error('Result completo:', JSON.stringify(result, null, 2));
         Alert.alert('Erro no Login', errorMessage);
       }
     } catch (error) {

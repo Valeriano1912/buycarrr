@@ -46,6 +46,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
+    // Garantir que sempre retornamos um objeto
+    let result = { success: false, error: 'Erro desconhecido' };
+    
     try {
       setLoading(true);
       console.log('🔵 Tentando fazer login...');
@@ -71,10 +74,13 @@ export const AuthProvider = ({ children }) => {
         await AsyncStorage.setItem('user', JSON.stringify(userData));
         
         console.log('✅ Login realizado com sucesso!');
-        return { success: true };
+        result = { success: true };
+        return result;
       } else {
         console.log('❌ Resposta sem access_token:', response.data);
-        return { success: false, error: response.data.error || 'Erro no login' };
+        const errorMsg = response.data?.error || response.data?.message || 'Erro no login';
+        result = { success: false, error: errorMsg };
+        return result;
       }
     } catch (error) {
       console.error('❌ ERRO NO LOGIN!');
@@ -116,10 +122,11 @@ export const AuthProvider = ({ children }) => {
       
       console.error('Mensagem final de erro:', errorMessage);
       
-      return { 
+      result = { 
         success: false, 
         error: errorMessage
       };
+      return result;
     } finally {
       setLoading(false);
       console.log('🔄 Loading finalizado');
